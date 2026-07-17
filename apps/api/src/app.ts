@@ -1,6 +1,16 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import { uuidv7 } from "uuidv7";
 import { pool } from "./db/pool.ts";
+import { fromPromise, ResultAsync } from "neverthrow";
+
+type ReadinessError = { kind: "databaseUnavailable"; cause: unknown };
+
+export function dbCheck(): ResultAsync<void, ReadinessError> {
+  return fromPromise(pool.query("SELECT 1"), (cause): ReadinessError => ({
+    kind: "databaseUnavailable",
+    cause,
+  })).map(() => undefined);
+}
 
 export function createServer(): FastifyInstance {
   const server = Fastify({
@@ -12,19 +22,17 @@ export function createServer(): FastifyInstance {
     return { status: "ok" };
   });
 
-  server.get("/ready", async (request, reply) => {
-    try {
-      const query = await pool.query("SELECT 1 FROM schema_migrations LIMIT 1");
-      if (query.rows.length === 0) {
+  server.get("/ready", async (_req, reply) => {
+    return dbCheck().match(
+      (_ok) => {
+        return { status: "Ready" };
+      },
+      (err) => {
+        server.log.error(err.cause);
         reply.code(503);
         return { status: "Service unavailable" };
-      }
-    } catch (err) {
-      server.log.error(err);
-      reply.code(503);
-      return { status: "Service unavailable" };
-    }
-    return { status: "Ready" };
+      },
+    );
   });
 
   server.addHook("onClose", async () => {

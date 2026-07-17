@@ -1,0 +1,32 @@
+{
+  "name": "fictusbank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackson-hughes/FictusBank.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jackson-hughes/FictusBank/issues"
+  },
+  "homepage": "https://github.com/jackson-hughes/FictusBank#readme",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "volta": {
+    "node": "24.18.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.5",
+    "typescript": "^7.0.2"
+  }
+}

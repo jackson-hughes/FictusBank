@@ -1,0 +1,14 @@
+{
+    // https://www.typescriptlang.org/tsconfig
+    "compilerOptions": {
+        "strict": true,
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "target": "esnext",
+        "erasableSyntaxOnly": true,
+        "verbatimModuleSyntax": true, // makes type-only imports explicit
+        "allowImportingTsExtensions": true, // permits './pool.ts' style imports
+        "rewriteRelativeImportExtensions": true, // keeps a future tsc build output valid
+        "noEmit": true // do not produce compiler output files
+    }
+}

@@ -1,0 +1,17 @@
+name: FictusBank
+services:
+  db:
+    container_name: fic-db
+    image: postgres:18
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    env_file: apps/api/.env
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

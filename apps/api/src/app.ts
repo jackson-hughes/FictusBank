@@ -1,16 +1,7 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import { uuidv7 } from "uuidv7";
 import { pool } from "./db/pool.ts";
-import { fromPromise, ResultAsync } from "neverthrow";
-
-type ReadinessError = { kind: "databaseUnavailable"; cause: unknown };
-
-export function dbCheck(): ResultAsync<void, ReadinessError> {
-  return fromPromise(pool.query("SELECT 1"), (cause): ReadinessError => ({
-    kind: "databaseUnavailable",
-    cause,
-  })).map(() => undefined);
-}
+import { readinessCheck } from "./health/readiness.ts";
 
 export function createServer(): FastifyInstance {
   const server = Fastify({
@@ -23,7 +14,7 @@ export function createServer(): FastifyInstance {
   });
 
   server.get("/ready", async (_req, reply) => {
-    return dbCheck().match(
+    return readinessCheck().match(
       (_ok) => {
         return { status: "Ready" };
       },

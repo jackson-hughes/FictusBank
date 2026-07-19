@@ -16,7 +16,8 @@ export function getAccountByID(
 FROM accounts
 LEFT JOIN account_holder ON accounts.id = account_holder.account_id
 LEFT JOIN customers ON account_holder.customer_id = customers.id
-WHERE accounts.id = $1;`,
+WHERE accounts.id = $1
+ORDER BY customers.id;`,
       [accountID],
     ),
     (cause): AccountsError => ({

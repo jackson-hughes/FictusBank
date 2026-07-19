@@ -2,15 +2,15 @@ export type AccountsError =
   { kind: "databaseUnavailable"; cause: unknown } | { kind: "notFound" };
 
 export type AccountRow = {
-  account_id: number;
+  account_id: string;
   category: "customer" | "system";
-  customer_id: number;
+  customer_id: string;
   first_name: string;
   last_name: string;
 };
 
 export type Account = {
-  id: number;
+  id: string;
   category: "customer" | "system";
-  holders: { id: number; name: string }[];
+  holders: { id: string; name: string }[];
 };

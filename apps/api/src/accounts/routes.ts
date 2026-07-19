@@ -1,20 +1,18 @@
 import { type FastifyInstance } from "fastify";
 import * as accountsService from "./service.ts";
 
+const VALID_ID_PATTERN = /^[1-9]\d*$/;
+
 export function accountRoutes(server: FastifyInstance): void {
   server.get<{ Params: { id: string } }>(
     "/accounts/:id",
     async (req, reply) => {
-      if (
-        req.params.id == null ||
-        !Number.isInteger(parseInt(req.params.id)) ||
-        parseInt(req.params.id) <= 0
-      ) {
+      if (!VALID_ID_PATTERN.test(req.params.id)) {
         reply.code(400);
-        return { error: "Bad Request" };
+        return { error: "Bad request" };
       }
 
-      return accountsService.getAccountByID(parseInt(req.params.id)).match(
+      return accountsService.getAccountByID(req.params.id).match(
         (account) => account, // 200 by default, body = the account
         (error) => {
           switch (error.kind) {

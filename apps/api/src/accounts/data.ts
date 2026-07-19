@@ -3,7 +3,7 @@ import { type AccountsError, type Account, type AccountRow } from "./types.ts";
 import { fromPromise, ok, err, ResultAsync } from "neverthrow";
 
 export function getAccountByID(
-  accountID: number,
+  accountID: string,
 ): ResultAsync<Account, AccountsError> {
   return fromPromise(
     pool.query<AccountRow>(

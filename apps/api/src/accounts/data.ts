@@ -14,8 +14,8 @@ export function getAccountByID(
     customers.first_name,
     customers.last_name
 FROM accounts
-INNER JOIN account_holder ON accounts.id = account_holder.account_id
-INNER JOIN customers ON account_holder.customer_id = customers.id
+LEFT JOIN account_holder ON accounts.id = account_holder.account_id
+LEFT JOIN customers ON account_holder.customer_id = customers.id
 WHERE accounts.id = $1;`,
       [accountID],
     ),
@@ -35,10 +35,12 @@ WHERE accounts.id = $1;`,
     const account: Account = {
       id: rows[0].account_id,
       category: rows[0].category,
-      holders: rows.map((r) => ({
-        id: r.customer_id,
-        name: `${r.first_name} ${r.last_name}`,
-      })),
+      holders: rows
+        .filter((r) => r.customer_id !== null) // filter out any rows where the holder fields are null
+        .map((r) => ({
+          id: r.customer_id,
+          name: `${r.first_name} ${r.last_name}`,
+        })),
     };
 
     return ok(account);

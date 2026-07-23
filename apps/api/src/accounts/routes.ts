@@ -23,6 +23,14 @@ export function accountRoutes(server: FastifyInstance): void {
               server.log.error(error.cause); // log the real cause
               reply.code(503);
               return { error: "Service unavailable" };
+            case "databaseResponseInvalid":
+              server.log.error(error.cause);
+              reply.code(500);
+              return { error: "Internal Server Error" };
+            default:
+              const check: never = error;
+              reply.code(500);
+              return { error: "Internal Server Error" };
           }
         },
       );

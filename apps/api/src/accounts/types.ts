@@ -1,13 +1,7 @@
 export type AccountsError =
-  { kind: "databaseUnavailable"; cause: unknown } | { kind: "notFound" };
-
-export type AccountRow = {
-  account_id: string;
-  category: "customer" | "system";
-  customer_id: string;
-  first_name: string;
-  last_name: string;
-};
+  | { kind: "databaseUnavailable"; cause: unknown }
+  | { kind: "notFound" }
+  | { kind: "databaseResponseInvalid"; cause: unknown };
 
 export type Account = {
   id: string;

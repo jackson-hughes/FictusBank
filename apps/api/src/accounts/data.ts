@@ -1,6 +1,17 @@
 import { pool } from "../db/pool.ts";
-import { type AccountsError, type Account, type AccountRow } from "./types.ts";
+import { type AccountsError, type Account } from "./types.ts";
 import { fromPromise, ok, err, ResultAsync } from "neverthrow";
+import * as z from "zod";
+
+const accountRowSchema = z.object({
+  account_id: z.string(),
+  category: z.enum(["customer", "system"]),
+  customer_id: z.string().nullable(),
+  first_name: z.string().nullable(),
+  last_name: z.string().nullable(),
+});
+
+export type AccountRow = z.infer<typeof accountRowSchema>;
 
 export function getAccountByID(
   accountID: string,
@@ -25,7 +36,16 @@ ORDER BY customers.id;`,
       cause,
     }),
   ).andThen((result) => {
-    const rows = result.rows;
+    const parsed = z.array(accountRowSchema).safeParse(result.rows);
+
+    if (!parsed.success) {
+      return err<Account, AccountsError>({
+        kind: "databaseResponseInvalid",
+        cause: parsed.error,
+      });
+    }
+
+    const rows = parsed.data;
 
     if (rows.length === 0) {
       return err<Account, AccountsError>({
@@ -37,7 +57,18 @@ ORDER BY customers.id;`,
       id: rows[0].account_id,
       category: rows[0].category,
       holders: rows
-        .filter((r) => r.customer_id !== null) // filter out any rows where the holder fields are null
+        .filter(
+          (
+            r,
+          ): r is AccountRow & {
+            customer_id: string;
+            first_name: string;
+            last_name: string;
+          } =>
+            r.customer_id !== null &&
+            r.first_name !== null &&
+            r.last_name !== null,
+        ) // filter out any rows where the holder fields are null
         .map((r) => ({
           id: r.customer_id,
           name: `${r.first_name} ${r.last_name}`,

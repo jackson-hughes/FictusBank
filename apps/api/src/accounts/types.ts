@@ -1,7 +1,8 @@
 export type AccountsError =
   | { kind: "databaseUnavailable"; cause: unknown }
-  | { kind: "notFound" }
-  | { kind: "databaseResponseInvalid"; cause: unknown };
+  | { kind: "databaseError"; cause: unknown }
+  | { kind: "invalidAccountID"; cause: unknown }
+  | { kind: "notFound" };
 
 export type Account = {
   id: string;

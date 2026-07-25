@@ -2,6 +2,7 @@ import { pool } from "../db/pool.ts";
 import { type AccountsError, type Account } from "./types.ts";
 import { fromPromise, ok, err, ResultAsync } from "neverthrow";
 import * as z from "zod";
+import { DatabaseError } from "pg";
 
 const accountRowSchema = z.object({
   account_id: z.string(),
@@ -31,16 +32,25 @@ WHERE accounts.id = $1
 ORDER BY customers.id;`,
       [accountID],
     ),
-    (cause): AccountsError => ({
-      kind: "databaseUnavailable",
-      cause,
-    }),
+    (cause): AccountsError => {
+      if (!(cause instanceof DatabaseError)) {
+        return { kind: "databaseUnavailable", cause };
+      }
+      switch (cause.code) {
+        case "22003":
+          return { kind: "invalidAccountID", cause };
+        case "53300":
+          return { kind: "databaseUnavailable", cause };
+        default:
+          return { kind: "databaseError", cause };
+      }
+    },
   ).andThen((result) => {
     const parsed = z.array(accountRowSchema).safeParse(result.rows);
 
     if (!parsed.success) {
       return err<Account, AccountsError>({
-        kind: "databaseResponseInvalid",
+        kind: "databaseError",
         cause: parsed.error,
       });
     }

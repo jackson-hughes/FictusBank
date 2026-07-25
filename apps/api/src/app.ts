@@ -3,12 +3,19 @@ import { uuidv7 } from "uuidv7";
 import { pool } from "./db/pool.ts";
 import { readinessCheck } from "./health/readiness.ts";
 import { accountRoutes } from "./accounts/routes.ts";
+import {
+  validatorCompiler,
+  serializerCompiler,
+} from "@fastify/type-provider-zod";
 
 export function createServer(): FastifyInstance {
   const server = Fastify({
     logger: true,
     genReqId: () => uuidv7(),
   });
+
+  server.setValidatorCompiler(validatorCompiler);
+  server.setSerializerCompiler(serializerCompiler);
 
   server.get("/health", async () => {
     return { status: "ok" };

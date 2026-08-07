@@ -81,3 +81,18 @@ CREATE TRIGGER ledger_block_truncate
     EXECUTE FUNCTION check_ledger_operation();
 
 -- migrate:down
+DROP TRIGGER IF EXISTS ledger_block_truncate ON ledger;
+DROP TRIGGER IF EXISTS ledger_block_modify ON ledger;
+DROP TRIGGER IF EXISTS check_transfer_balance ON ledger;
+
+DROP FUNCTION IF EXISTS check_ledger_operation();
+DROP FUNCTION IF EXISTS check_transfer_balance();
+
+DROP TABLE IF EXISTS ledger;
+DROP TABLE IF EXISTS transfers;
+DROP TABLE IF EXISTS account_holder;
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS customers;
+
+DROP TYPE IF EXISTS currency;
+DROP TYPE IF EXISTS account_category;

@@ -14,9 +14,7 @@ const accountRowSchema = z.object({
 
 export type AccountRow = z.infer<typeof accountRowSchema>;
 
-export function getAccountByID(
-  accountID: string,
-): ResultAsync<Account, AccountsError> {
+export function getAccountByID(accountID: string): ResultAsync<Account, AccountsError> {
   return fromPromise(
     pool.query<AccountRow>(
       `SELECT
@@ -74,10 +72,7 @@ ORDER BY customers.id;`,
             customer_id: string;
             first_name: string;
             last_name: string;
-          } =>
-            r.customer_id !== null &&
-            r.first_name !== null &&
-            r.last_name !== null,
+          } => r.customer_id !== null && r.first_name !== null && r.last_name !== null,
         ) // filter out any rows where the holder fields are null
         .map((r) => ({
           id: r.customer_id,

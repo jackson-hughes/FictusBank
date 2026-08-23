@@ -3,7 +3,6 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { uuidv7 } from "uuidv7";
 
 import { accountRoutes } from "./accounts/routes.ts";
-import { authRoutes } from "./auth/routes.ts";
 import { pool } from "./db/pool.ts";
 import { readinessCheck } from "./health/readiness.ts";
 
@@ -34,8 +33,6 @@ export function createServer(): FastifyInstance {
   });
 
   server.register(accountRoutes);
-
-  server.register(authRoutes);
 
   server.addHook("onClose", async () => {
     await pool.end();

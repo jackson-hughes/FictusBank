@@ -1,8 +1,9 @@
+import { fromPromise, ok, err, ResultAsync } from "neverthrow";
+import { DatabaseError } from "pg";
+import * as z from "zod";
+
 import { pool } from "../db/pool.ts";
 import { type AccountsError, type Account } from "./types.ts";
-import { fromPromise, ok, err, ResultAsync } from "neverthrow";
-import * as z from "zod";
-import { DatabaseError } from "pg";
 
 const accountRowSchema = z.object({
   account_id: z.string(),

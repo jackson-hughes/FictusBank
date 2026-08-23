@@ -1,10 +1,11 @@
+import { validatorCompiler, serializerCompiler } from "@fastify/type-provider-zod";
 import Fastify, { type FastifyInstance } from "fastify";
 import { uuidv7 } from "uuidv7";
-import { pool } from "./db/pool.ts";
-import { readinessCheck } from "./health/readiness.ts";
+
 import { accountRoutes } from "./accounts/routes.ts";
 import { authRoutes } from "./auth/routes.ts";
-import { validatorCompiler, serializerCompiler } from "@fastify/type-provider-zod";
+import { pool } from "./db/pool.ts";
+import { readinessCheck } from "./health/readiness.ts";
 
 export function createServer(): FastifyInstance {
   const server = Fastify({

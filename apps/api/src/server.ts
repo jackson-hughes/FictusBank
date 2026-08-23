@@ -1,5 +1,6 @@
-import { createServer } from "./app.ts";
 import closeWithGrace from "close-with-grace";
+
+import { createServer } from "./app.ts";
 
 const server = createServer();
 
@@ -13,7 +14,7 @@ const start = async () => {
     process.exit(1);
   }
 };
-start();
+await start();
 
 closeWithGrace({ delay: 15000 }, async ({ signal, err }) => {
   if (err) {

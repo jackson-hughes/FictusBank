@@ -30,9 +30,9 @@ jobs:
         run: npm run fmt:check
 
       - name: Lint
-        if: '!cancelled()'
+        if: "!cancelled()"
         run: npx oxlint --format=github --max-warnings=0
 
       - name: Typecheck
-        if: '!cancelled()'
+        if: "!cancelled()"
         run: npm run typecheck -w api

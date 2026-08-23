@@ -22,10 +22,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint"
   },
   "devDependencies": {
     "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "typescript": "^7.0.2"
   },
   "volta": {

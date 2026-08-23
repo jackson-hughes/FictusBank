@@ -1,7 +1,8 @@
 import type { FastifyPluginCallbackZod } from "@fastify/type-provider-zod";
-import type { Account } from "./types.ts";
-import * as accountsService from "./service.ts";
 import * as z from "zod";
+
+import * as accountsService from "./service.ts";
+import type { Account } from "./types.ts";
 
 const VALID_ID_PATTERN = /^[1-9]\d*$/;
 
@@ -50,7 +51,7 @@ export const accountRoutes: FastifyPluginCallbackZod = (server, opts, done) => {
               reply.code(503);
               return { error: "Service unavailable" };
             default:
-              const check: never = error;
+              error satisfies never;
               reply.code(500);
               return { error: "Internal Server Error" };
           }

@@ -1,5 +1,6 @@
-import { pool } from "../db/pool.ts";
 import { fromPromise, ResultAsync } from "neverthrow";
+
+import { pool } from "../db/pool.ts";
 
 type ReadinessError = { kind: "databaseUnavailable"; cause: unknown };
 

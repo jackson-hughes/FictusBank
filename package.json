@@ -2,31 +2,33 @@
   "name": "fictusbank",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "keywords": [],
+  "homepage": "https://github.com/jackson-hughes/FictusBank#readme",
+  "bugs": {
+    "url": "https://github.com/jackson-hughes/FictusBank/issues"
   },
+  "license": "ISC",
+  "author": "",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jackson-hughes/FictusBank.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/jackson-hughes/FictusBank/issues"
-  },
-  "homepage": "https://github.com/jackson-hughes/FictusBank#readme",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "volta": {
-    "node": "24.19.0"
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "devDependencies": {
-    "prettier": "^3.9.5",
+    "oxfmt": "^0.64.0",
     "typescript": "^7.0.2"
+  },
+  "volta": {
+    "node": "24.19.0"
   }
 }

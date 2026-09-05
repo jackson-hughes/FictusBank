@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Edit(/apps/**)",
+      "Edit(/packages/**)",
+      "Edit(/.github/**)",
+      "Edit(/.husky/**)",
+      "Edit(/package.json)",
+      "Edit(/package-lock.json)",
+      "Edit(/tsconfig.json)",
+      "Edit(/.oxlintrc.json)",
+      "Edit(/.oxfmtrc.json)",
+      "Edit(/docker-compose.yaml)",
+      "Edit(/renovate.json)",
+      "Edit(/.gitignore)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git restore *)",
+      "Bash(git stash *)",
+      "Bash(git reset *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git cherry-pick *)",
+      "Bash(git apply *)"
+    ]
+  }
+}

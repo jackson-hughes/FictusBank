@@ -1,0 +1,52 @@
+{
+  "skill_name": "sql-sandbox",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My LEFT JOIN from customers to accounts is dropping customers who don't have any accounts yet. I've got the status = 'open' filter in the WHERE clause. I don't really get why that matters — can I have some example data to poke at?",
+      "expected_output": "A runnable sandbox widget (neutral domain, not customers/accounts) with presets contrasting the filter in ON vs WHERE, plus a short chat reply with one forcing question.",
+      "files": [],
+      "expectations": [
+        "A sandbox.html was produced",
+        "Loads sql.js 1.14.2 sql-asm.js from cdnjs (pure JS, no runtime WASM fetch)",
+        "No unfilled {{SLOT}} markers",
+        "DDL executes in SQLite without error",
+        "At least two preset queries and every preset runs without error",
+        "No two presets return an identical result set (contrast is the lesson)",
+        "Neutral domain: schema does not use bank tables",
+        "Widget carries no prose: no h1/h3 and no question outside scripts",
+        "No hard-coded text colours (dark-mode safe)",
+        "Reply asks exactly one question (turn budget)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Next slice is GET /customers/:id/accounts. The handler needs to tell apart 'customer doesn't exist' (404) from 'customer exists but has no accounts' (200, empty list), and I'd like to do it in one query rather than two round trips. I can't picture what the rows look like coming back in each case.",
+      "expected_output": "A runnable sandbox seeded so one query shows all three outcomes (found with rows / found with none / not found), presets for each case, one forcing question in chat.",
+      "files": [],
+      "expectations": [
+        "A sandbox.html was produced",
+        "Loads sql.js 1.14.2 sql-asm.js from cdnjs (pure JS, no runtime WASM fetch)",
+        "No unfilled {{SLOT}} markers",
+        "DDL executes in SQLite without error",
+        "At least two preset queries and every preset runs without error",
+        "No two presets return an identical result set (contrast is the lesson)",
+        "Neutral domain: schema does not use bank tables",
+        "Widget carries no prose: no h1/h3 and no question outside scripts",
+        "No hard-coded text colours (dark-mode safe)",
+        "Reply asks exactly one question (turn budget)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "When I insert an account with id 9007199254740993 pg throws SQLSTATE 22003 but the same insert in my unit test with a smaller id is fine. What's the actual boundary here? Can you give me a sandbox to play with the edges?",
+      "expected_output": "No SQLite sandbox — this is Postgres type/error behaviour, which the fence excludes. A brief reason why the widget would mislead, and a paste-and-run block for psql instead.",
+      "files": [],
+      "expectations": [
+        "No SQLite/in-browser sandbox produced (fence: Postgres-specific)",
+        "Reply points him at real Postgres (psql) with a runnable SQL block",
+        "Reply asks exactly one question (turn budget)"
+      ]
+    }
+  ]
+}

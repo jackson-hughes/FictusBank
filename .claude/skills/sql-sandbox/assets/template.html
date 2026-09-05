@@ -1,0 +1,48 @@
+<h2 class="sr-only">{{SR_SUMMARY}}</h2>
+<style>
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.sb{border:1px solid var(--border);border-radius:12px;padding:var(--pad-lg);background:var(--surface-1)}
+.sb pre{margin:0;font:13px/1.5 var(--font-mono);color:var(--text-secondary);white-space:pre-wrap}
+.sb textarea{width:100%;box-sizing:border-box;overflow:hidden;font:14px/1.5 var(--font-mono);color:var(--text-primary);background:var(--surface-2);border:1px solid var(--border-strong);border-radius:var(--radius);padding:var(--pad-sm);resize:none}
+.sb button{font-size:13px;padding:6px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);cursor:pointer}
+.sb table{border-collapse:collapse;font:13px var(--font-mono);margin-top:var(--pad-sm)}
+.sb th,.sb td{border:1px solid var(--border);padding:4px 10px;text-align:left;color:var(--text-primary)}
+.sb th{font-weight:500;color:var(--text-secondary)}
+.sb .null{color:var(--text-muted);font-style:italic}
+</style>
+<div style="padding:1rem 0">
+<div class="sb">
+<pre>{{SCHEMA_SUMMARY}}</pre>
+<div id="presets" style="display:flex;gap:var(--gap-sm);margin:var(--pad-md) 0 var(--pad-sm);flex-wrap:wrap"></div>
+<textarea id="q" spellcheck="false" rows="3"></textarea>
+<div style="display:flex;gap:var(--gap-sm);align-items:center;margin-top:var(--pad-sm)">
+<button id="run">Run</button>
+<span id="err" style="font-size:13px;color:var(--text-danger)"></span>
+</div>
+<div id="out" style="overflow-x:auto"></div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-asm.js"></script>
+<script>
+const DDL={{DDL_AND_SEED}};
+const PRESETS={{PRESETS}};
+const q=document.getElementById('q'),err=document.getElementById('err'),out=document.getElementById('out'),bar=document.getElementById('presets');
+function fit(){q.style.height='auto';q.style.height=(q.scrollHeight+2)+'px';}
+function setQuery(s){q.value=s;err.textContent='';fit();}
+PRESETS.forEach(p=>{const b=document.createElement('button');b.textContent=p.label;b.onclick=()=>setQuery(p.sql);bar.appendChild(b);});
+setQuery(PRESETS[0].sql);
+let db;
+initSqlJs().then(SQL=>{db=new SQL.Database();db.run(DDL);run();});
+function run(){err.textContent='';
+if(!db){err.textContent='Database still loading';return;}
+if(!q.value.trim()){err.textContent='Enter a query first';return;}
+try{const r=db.exec(q.value);
+if(!r.length){out.innerHTML='<p style="font-size:13px;color:var(--text-muted)">No rows</p>';return;}
+const {columns,values}=r[0];
+let h='<table><tr>'+columns.map(c=>'<th>'+c+'</th>').join('')+'</tr>';
+for(const row of values)h+='<tr>'+row.map(v=>v===null?'<td class="null">NULL</td>':'<td>'+String(v).replace(/</g,'&lt;')+'</td>').join('')+'</tr>';
+out.innerHTML=h+'</table><p style="font-size:12px;color:var(--text-muted);margin:6px 0 0">'+values.length+' row'+(values.length===1?'':'s')+'</p>';}
+catch(e){err.textContent=e.message;}}
+document.getElementById('run').onclick=run;
+q.addEventListener('input',()=>{err.textContent='';fit();});
+</script>

@@ -1,0 +1,23 @@
+{
+  "sr_summary": "Interactive SQL sandbox: a preloaded two-table database with an editable query box and results table, for exploring LEFT JOIN with the filter in ON versus WHERE.",
+  "schema_summary": "authors(id, name)          books(id, author_id, title, year)\n1  Ada                     1  1  Analytical Engine   1843\n2  Grace                   2  1  Notes on Bernoulli  1842\n3  Linus                   3  2  Compiler Design     1952",
+  "ddl_and_seed": "CREATE TABLE authors(id INTEGER PRIMARY KEY, name TEXT);\nCREATE TABLE books(id INTEGER PRIMARY KEY, author_id INTEGER, title TEXT, year INTEGER);\nINSERT INTO authors VALUES (1,'Ada'),(2,'Grace'),(3,'Linus');\nINSERT INTO books VALUES (1,1,'Analytical Engine',1843),(2,1,'Notes on Bernoulli',1842),(3,2,'Compiler Design',1952);",
+  "presets": [
+    {
+      "label": "Filter in ON",
+      "sql": "SELECT a.name, b.title\nFROM authors a\nLEFT JOIN books b\n  ON b.author_id = a.id\n AND b.year > 1842;"
+    },
+    {
+      "label": "Filter in WHERE",
+      "sql": "SELECT a.name, b.title\nFROM authors a\nLEFT JOIN books b\n  ON b.author_id = a.id\nWHERE b.year > 1842;"
+    },
+    {
+      "label": "No filter",
+      "sql": "SELECT a.name, b.title\nFROM authors a\nLEFT JOIN books b\n  ON b.author_id = a.id;"
+    },
+    {
+      "label": "What WHERE tests",
+      "sql": "SELECT a.name, b.title, b.year > 1842 AS where_test\nFROM authors a\nLEFT JOIN books b\n  ON b.author_id = a.id;"
+    }
+  ]
+}

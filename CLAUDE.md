@@ -64,6 +64,8 @@ be low-friction: one paste-and-run block (minimal schema + seed + query,
 neutral domain). Use one only when hands-on experimentation carries the
 lesson better than an inline worked example — a sandbox is a context
 switch and has to earn it.
+For SQL, use the `sql-sandbox` skill: a runnable SQLite widget in chat, no
+environment needed.
 
 ## Code review
 

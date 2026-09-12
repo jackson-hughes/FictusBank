@@ -1,13 +1,14 @@
 import closeWithGrace from "close-with-grace";
 
 import { createServer } from "./app.ts";
+import { envConfig } from "./config.ts";
 
 const server = createServer();
 
 const start = async () => {
   try {
     await server.listen({
-      port: 3000,
+      port: envConfig.PORT,
     });
   } catch (err) {
     server.log.error(err);

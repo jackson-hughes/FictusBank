@@ -1,7 +1,9 @@
 import { Pool } from "pg";
 
+import { envConfig } from "../config.ts";
+
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: envConfig.DATABASE_URL,
 });
 
 pool.on("error", (err) => {

@@ -72,6 +72,27 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: account; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account (
+    id text NOT NULL,
+    "accountId" text NOT NULL,
+    "providerId" text NOT NULL,
+    "userId" text NOT NULL,
+    "accessToken" text,
+    "refreshToken" text,
+    "idToken" text,
+    "accessTokenExpiresAt" timestamp with time zone,
+    "refreshTokenExpiresAt" timestamp with time zone,
+    scope text,
+    password text,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+--
 -- Name: account_holder; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -115,7 +136,8 @@ CREATE TABLE public.customers (
     last_name text NOT NULL,
     email text NOT NULL,
     address text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    user_id text
 );
 
 
@@ -171,6 +193,22 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: session; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session (
+    id text NOT NULL,
+    "expiresAt" timestamp with time zone NOT NULL,
+    token text NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "ipAddress" text,
+    "userAgent" text,
+    "userId" text NOT NULL
+);
+
+
+--
 -- Name: transfers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -194,11 +232,48 @@ ALTER TABLE public.transfers ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- Name: user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."user" (
+    id text NOT NULL,
+    name text NOT NULL,
+    email text NOT NULL,
+    "emailVerified" boolean NOT NULL,
+    image text,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: verification; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.verification (
+    id text NOT NULL,
+    identifier text NOT NULL,
+    value text NOT NULL,
+    "expiresAt" timestamp with time zone NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
 -- Name: account_holder account_holder_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account_holder
     ADD CONSTRAINT account_holder_pkey PRIMARY KEY (account_id, customer_id);
+
+
+--
+-- Name: account account_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_pkey PRIMARY KEY (id);
 
 
 --
@@ -242,11 +317,72 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: session session_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session
+    ADD CONSTRAINT session_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: session session_token_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session
+    ADD CONSTRAINT session_token_key UNIQUE (token);
+
+
+--
 -- Name: transfers transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.transfers
     ADD CONSTRAINT transfers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_email_key UNIQUE (email);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: verification verification_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.verification
+    ADD CONSTRAINT verification_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "account_userId_idx" ON public.account USING btree ("userId");
+
+
+--
+-- Name: session_userId_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "session_userId_idx" ON public.session USING btree ("userId");
+
+
+--
+-- Name: verification_identifier_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX verification_identifier_idx ON public.verification USING btree (identifier);
 
 
 --
@@ -287,6 +423,22 @@ ALTER TABLE ONLY public.account_holder
 
 
 --
+-- Name: account account_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."user"(id) ON DELETE CASCADE;
+
+
+--
+-- Name: customers customers_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
 -- Name: ledger ledger_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -303,6 +455,14 @@ ALTER TABLE ONLY public.ledger
 
 
 --
+-- Name: session session_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session
+    ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES public."user"(id) ON DELETE CASCADE;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -314,4 +474,6 @@ ALTER TABLE ONLY public.ledger
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20260715225430');
+    ('20260715225430'),
+    ('20260807202722'),
+    ('20260807211424');

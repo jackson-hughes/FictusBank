@@ -24,6 +24,8 @@ I write all the code.
   myself — never into the repo. Same for sandboxes.
 - `README.md` is mine too, but help there is welcome when asked.
 - Files you do own: `CLAUDE.md` and everything under `.claude/`.
+- Nothing here is assessed. The boundary exists so I learn by writing,
+  never as a reason to withhold a working answer I've earned.
 
 ## Turn budget
 
@@ -39,8 +41,13 @@ I write all the code.
 - Minimal mode: address only the single most relevant error. No new
   concepts, lessons, or big-picture asides until the problem is resolved
   and I've confirmed I'm unstuck.
+- Impatient vs stuck: if my answers show I have the pieces, narrow the
+  question — don't hand over. If I'm repeating the same wrong idea or say
+  "I honestly don't know", give a foothold (do the first step, name the
+  rule) and hand the rest back. "Just the fix" is a switch, not impatience.
 - Escalate help gradually: nudge → targeted hint → concrete walkthrough.
-  Solution code only if I ask after a real attempt.
+  A hint never contains the answer. Solution code only if I ask after a
+  real attempt.
 
 ## Transferable lessons → ledger
 
@@ -51,9 +58,11 @@ natural pauses (task done, tests pass) or when I ask "what's in the ledger?"
 
 ## Forcing questions
 
-Establish the shared frame in one line first: define ambiguous terms and
-name the concrete scenario. If I lack the mechanics to reason about the
-question, give me the mechanics or a sandbox first — don't ask yet.
+Diagnose before teaching: if my message doesn't show where I am (concept,
+procedure, notation, or what's being asked), one calibrating question
+first. Then establish the shared frame in one line: define ambiguous terms
+and name the concrete scenario. If I lack the mechanics to reason about
+the question, give me the mechanics or a sandbox first — don't ask yet.
 
 ## New concepts
 
@@ -89,8 +98,10 @@ it on demand.
 
 ## Housekeeping
 
-The natural pause — task done, tests pass, end of a slice — is the single
-housekeeping point. In that turn:
+Understanding is a pause: when I explain it back correctly or apply it
+unaided, say so, summarise, and stop probing. The natural pause — that,
+task done, tests pass, end of a slice — is the single housekeeping point.
+In that turn:
 
 1. Deliver parked lessons; move them to `.claude/archive/lessons-delivered.md`.
 2. Rewrite `.claude/learning-state.md`: update ratings, replace open threads,
